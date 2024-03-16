@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Font Awesome -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.css"
+rel="stylesheet"
+/>
+<!-- Using CDN -->
+<script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore.js"></script>
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js"></script>
+
+<!-- Firebase Firestore (if you are using Firestore) -->
+<script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore.js"></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog App</title>
+    <style>
+     /* Reset default styles and set minimum width */
+body {
+  margin: 0;
+  min-width: 250px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Style links */
+a {
+  display: inline-block;
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #4CAF50;
+}
+
+/* Task list styles */
+.tasks {
+  margin: 30px auto;
+  max-width: 600px;
+}
+
+.tasks ul {
+  padding: 0;
+}
+
+.tasks ul li {
+  position: relative;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  list-style: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tasks ul li:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+
+.tasks ul li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Close button styles */
+.close {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.close:hover {
+  background-color: #cc0000;
+}
+
+.close::before, 
+.close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 2px;
+  background-color: white;
+}
+
+.close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Jumbotron styles */
+.jumbotron {
+  background-color: #323064;
+  text-align: center;
+  color: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Button styles */
+.btn-primary,
+.btn-success {
+  width: 100%;
+  padding: 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+  background-color: #45a049;
+}
+
+    </style>
+</head>
+<body>
+    <!-- <button id="user-logout">Logout</button> -->
+
+
+    <!-- Navbar -->
+    <nav data-mdb-navbar-init class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+      <!-- Container wrapper -->
+      <div class="container">
+        <!-- Navbar brand -->
+        <a class="navbar-brand me-2" href="">
+          <div class="position-relative">
+              <img
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  height="50"
+                  alt="MDB Logo"
+                  loading="lazy"
+                  style="margin-top: -1px; border-radius: 100%;"
+              />
+              <div class="position-absolute top-0 start-0 translate-middle">
+                  <a href="#" id="edit-avatar">
+                      <i class="fas fa-pencil-alt text-secondary"></i>
+                  </a>
+              </div>
+          </div>
+      </a>
+    
+        <!-- Toggle button -->
+        <button
+          data-mdb-collapse-init
+          class="navbar-toggler"
+          type="button"
+          data-mdb-target="#navbarButtonsExample"
+          aria-controls="navbarButtonsExample"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+    
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarButtonsExample">
+          <!-- Left links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="#">username</a>
+            </li>
+          </ul>
+          <!-- Left links -->
+    
+          <div class="d-flex align-items-center">
+           
+            <button data-mdb-ripple-init type="button" class="btn btn-danger me-3" id="user-logout" >
+              Log Out
+            </button>
+            
+          </div>
+        </div>
+        <!-- Collapsible wrapper -->
+      </div>
+      <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+     
+     
+    <body>
+      <div class="container">
+        <div class="jumbotron page-header">
+          <h2 style="margin:5px">My To Do List</h2>
+        </div>
+        <form>
+          <div class="form-group">
+            <label for="title">Task:</label>
+            <input type="text" id="title" class="form-control" placeholder="Add a title... ">
+          </div>
+          <div class="form-group">
+            <label for="usr">Who should do it:</label>
+            <input type="text" id="usr" class="form-control" placeholder="Add a user...">
+          </div>
+          <div class="form-group">
+            <label for="usr">Due Date:</label>
+            <input type="date" id="due-date" class="form-control" placeholder="Due date">
+          </div>
+          <div class="row">
+            <div class="col-xs-3 pull-left">
+              <button type="button" class="btn btn-primary" onclick="newElement()">Add Task</button>
+            </div>
+            
+            <div class="col-lg-6 pull-right">
+              <div class="input-group">
+                <input id="search-text" onkeyup="searchInList()" type="text" class="form-control" placeholder="Search..." name="search">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="tasks">
+        <ul id="task-list">
+        </ul>
+      </div>
+      <ul id="pagination" class="pagination pagination-lg"></ul>
+    </body>
+    
+     
+     
+     
+     
+     
+     
+     
+     
+     
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.umd.min.js"></script>
+  <script>
+    var todoList = [{
+    'todo': 'Do task 0',
+    'id': 'todo0'
+  }, {
+    'todo': 'Do task 1',
+    'id': 'todo1'
+  }, {
+    'todo': 'Do task 2',
+    'id': 'todo2'
+  }, {
+    'todo': 'Do task 3',
+    'id': 'todo3'
+  }, {
+    'todo': 'Do task 4',
+    'id': 'todo4'
+  }, {
+    'todo': 'Do task 5',
+    'id': 'todo5'
+  }, {
+    'todo': 'Do task 6',
+    'id': 'todo6'
+  }, {
+    'todo': 'Do task 7',
+    'id': 'todo7'
+  }, {
+    'todo': 'Do task 8',
+    'id': 'todo8'
+  }, {
+    'todo': 'Do task 9',
+    'id': 'todo9'
+  }, {
+    'todo': 'Do task 10',
+    'id': 'todo10'
+  }, {
+    'todo': 'Do task 11',
+    'id': 'todo11'
+  }, {
+    'todo': 'Do task 12',
+    'id': 'todo12'
+  }, {
+    'todo': 'Do task 13',
+    'id': 'todo13'
+  }, {
+    'todo': 'Do task 14',
+    'id': 'todo14'
+  }];
+  
+  var pageList = new Array();
+  var currentPage = 1;
+  var numberPerPage = 10;
+  var numberOfPages = 0;
+  
+  function newElement() {
+    var inputTitle = document.getElementById('title').value,
+      inputUser = document.getElementById('usr').value,
+      inputDate = document.getElementById('due-date').value,
+      todo = '';
+    if (inputTitle === '') {
+      alert("Please write a task");
+      return;
+    } else {
+      todo = inputTitle;
+      if (inputUser != '') {
+        todo = inputUser + " needs to " + inputTitle;
+      }
+      if (inputDate != '') {
+        todo = todo + " by " + inputDate
+      }
+    }
+    var newTodoId = findNextId(),
+      newTodo = {
+        'todo': todo,
+        'id': 'todo' + newTodoId
+      };
+    todoList.push(newTodo);
+    sortElementsById();
+    clearFields();
+  }
+  
+  function fetchIdFromObj(todo) {
+    return parseInt(todo.id.slice(4));
+  }
+  
+  function findNextId() {
+    if (todoList.length === 0) {
+      return 0;
+    }
+    var lastElementId = fetchIdFromObj(todoList[todoList.length - 1]),
+      firstElementId = fetchIdFromObj(todoList[0]);
+    return (firstElementId >= lastElementId) ? (firstElementId + 1) : (lastElementId + 1);
+  }
+  
+  function clearFields() {
+    document.getElementById('title').value = '';
+    document.getElementById('usr').value = '';
+    document.getElementById('due-date').value = '';
+  }
+  
+  function deleteElement(event) {
+    var idOfEltToBeDeleted = event.target.parentElement.id;
+    var arrayIndex = todoList.findIndex(function(singleTodo) {
+      return singleTodo.id === idOfEltToBeDeleted;
+    });
+    if (arrayIndex !== -1) {
+      todoList.splice(arrayIndex, 1);
+    }
+    load(todoList);
+  }
+  
+  function displayOneElement(todoObject) {
+    var li_element = document.createElement("li");
+    var p_element = document.createElement("p");
+    p_element.className = "task-name";
+    li_element.appendChild(p_element);
+    li_element.setAttribute("id", todoObject.id);
+    var text_node = document.createTextNode(todoObject.todo);
+    p_element.appendChild(text_node);
+    var span_element = document.createElement("SPAN");
+    span_element.className = "close";
+    var txt_node = document.createTextNode("\u00D7");
+    span_element.appendChild(txt_node);
+    span_element.onclick = deleteElement;
+    li_element.appendChild(span_element);
+    document.getElementById("task-list").appendChild(li_element);
+  }
+  
+  function sortElementsById() {
+    var manyTodos = todoList.sort(function(a, b) {
+      var x = fetchIdFromObj(a);
+      var y = fetchIdFromObj(b);
+      if (x > y) {
+        return -1;
+      }
+      if (x < y) {
+        return 1;
+      }
+      return 0;
+    })
+    load(manyTodos);
+  }
+  
+  function sortElementsByName() {
+    var manyTodos = todoList.sort(function(a, b) {
+      var x = a.todo.toLowerCase();
+      var y = b.todo.toLowerCase();
+      if (x < y) {
+        return -1;
+      }
+      if (x > y) {
+        return 1;
+      }
+      return 0;
+    })
+    load(manyTodos);
+  }
+  
+  function searchInList() {
+    var str = document.getElementById('search-text').value.toLowerCase();
+    var searchResultList = [];
+    for (var j = 0; j < todoList.length; j++) {
+      if (todoList[j].todo.toLowerCase().match(str))
+        searchResultList.push(todoList[j]);
+    }
+    load(searchResultList);
+  }
+  
+  function getNumberOfPages(manyTodos) {
+    return Math.ceil(manyTodos.length / numberPerPage);
+  }
+  
+  function gotoPage(event) {
+    currentPage = parseInt(event.target.id);
+    loadList(todoList);
+  }
+  
+  function refreshPaginations() {
+    var paginationTarget = document.getElementById('pagination'),
+      setActiveClass = false;
+    paginationTarget.innerHTML = '';
+    for (var i = 1; i <= numberOfPages; i++) {
+      var li_element = document.createElement("li"),
+        a_element = document.createElement('a');
+      if (i === currentPage) {
+        li_element.className = 'active';
+        setActiveClass = true;
+      } else {
+        a_element.onclick = gotoPage;
+      }
+      a_element.setAttribute('id', i);
+      a_element.innerHTML = i;
+      li_element.appendChild(a_element);
+      paginationTarget.appendChild(li_element);
+    }
+    if (numberOfPages > 0 && setActiveClass === false) {
+      currentPage = 1;
+      refreshPaginations();
+      loadList(todoList);
+    }
+  }
+  
+  function loadList(manyTodos) {
+    var begin = ((currentPage - 1) * numberPerPage);
+    var end = begin + numberPerPage;
+    pageList = manyTodos.slice(begin, end);
+    refreshPaginations();
+    drawList(pageList);
+  }
+  
+  function drawList(manyTodos) {
+    document.getElementById("task-list").innerHTML = "";
+    manyTodos.forEach(function(singleTodo) {
+      displayOneElement(singleTodo);
+    });
+  }
+  
+  function load(manyTodos) {
+    numberOfPages = getNumberOfPages(manyTodos);
+    loadList(manyTodos);
+  }
+  
+  window.onload = function() {
+    sortElementsById();
+  }
+  
+  </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.umd.min.js"></script>
+<script type="module">
+ 
+</script>
+</body>
+
+</html>
+
